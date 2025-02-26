@@ -3,7 +3,7 @@ import RatingCard from "../../components/RatingCard";
 import axios from "axios";
 
 const Rating = () => {
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {

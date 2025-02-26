@@ -1,7 +1,7 @@
 import axios from "axios";
 import { use } from "react";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 export const searchRide = async (startLat, startLng, endLat, endLng) => {
   try {

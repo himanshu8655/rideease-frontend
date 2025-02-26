@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Alert } from "../components/Alert";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 /**
  * Sign-up function to register a new user with first name and last name.

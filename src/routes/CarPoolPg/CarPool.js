@@ -10,7 +10,7 @@ const containerStyle = {
   height: "100vh",
   position: "relative",
 };
-const MAPS_API = process.env.REACT_APP_MAPS_API;
+const MAPS_API = process.env.REACT_APP_MAPS_API || "AIzaSyAmNsU6vGDP7T-kFwEgM5Uki9b2_4xRrO0";
 
 const CarPool = () => {
   const user_type = sessionStorage.getItem("user_type");

@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 import axios from 'axios';
 import MessageTile from '../../components/MessageTile';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 let offset = 0;
 let adminId = "";
 

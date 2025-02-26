@@ -50,7 +50,7 @@ const SearchRide = () => {
 
   const generateMapUrl = (start, end) => {
     const baseUrl = "https://www.google.com/maps/embed/v1/directions";
-    const apiKey = process.env.REACT_APP_MAPS_API; // Replace with your API key
+    const apiKey = process.env.REACT_APP_MAPS_API || "AIzaSyAmNsU6vGDP7T-kFwEgM5Uki9b2_4xRrO0";
     const origin = `${start.coordinates[1]},${start.coordinates[0]}`;
     const destination = `${end.coordinates[1]},${end.coordinates[0]}`;
     const new_url = `${baseUrl}?key=${apiKey}&origin=${origin}&destination=${destination}&mode=driving`;
