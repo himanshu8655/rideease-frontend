@@ -1,0 +1,49 @@
+.search-ride-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .title {
+    text-align: center;
+    color: #282c34;
+    margin-bottom: 20px;
+  }
+  
+  .error-message {
+    color: red;
+    text-align: center;
+  }
+  
+  .loading-message {
+    text-align: center;
+    color: #888;
+  }
+  
+  .ride-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .ride-table th,
+  .ride-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .ride-table th {
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  
+  .ride-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .ride-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
