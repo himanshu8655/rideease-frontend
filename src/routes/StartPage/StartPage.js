@@ -1,11 +1,10 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import "./Startpage.css";
 
-// Importing images
 import img1 from "../../assets/image1.png";
 import img2 from "../../assets/image2.png";
 import img3 from "../../assets/image3.png";
@@ -21,6 +20,8 @@ const reviews = [
 ];
 
 const StartPage = () => {
+  const navigate = useNavigate();
+
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -31,9 +32,13 @@ const StartPage = () => {
     autoplaySpeed: 3000
   };
 
+  useEffect(()=>{
+    if (sessionStorage.getItem("token") && sessionStorage.getItem("userId")) {
+      navigate('/user-type');
+    }
+  })
   return (
     <div className="start-page">
-      {/* Navbar */}
       <nav className="navbar">
         <div className="logo">RideEase</div>
         <div className="nav-links">
@@ -42,7 +47,6 @@ const StartPage = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <header className="hero">
         <div className="hero-content">
           <h1>Seamless Rides, Anytime, Anywhere</h1>
@@ -51,7 +55,6 @@ const StartPage = () => {
         </div>
       </header>
 
-      {/* New Contrasting Section */}
       <section className="contrast-section">
         <div className="black-section">
           <h2>Why Choose RideEase?</h2>
@@ -63,7 +66,6 @@ const StartPage = () => {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="features">
         <div className="feature">
           <img src={img1} alt="Recent Activity" className="feature-img large"/>
@@ -103,7 +105,6 @@ const StartPage = () => {
 
       </section>
 
-      {/* Reviews Section */}
       <section className="reviews">
         <h2>What Our Riders Say</h2>
         <Slider {...sliderSettings}>
@@ -116,7 +117,6 @@ const StartPage = () => {
         </Slider>
       </section>
 
-      {/* Footer */}
       <footer className="footer">
         <p>© 2025 RideEase. All rights reserved.</p>
       </footer>

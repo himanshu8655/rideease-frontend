@@ -1,4 +1,3 @@
-/* General Styles */
 body, html {
     font-family: 'Arial', sans-serif;
     margin: 0;
@@ -10,7 +9,6 @@ body, html {
     overflow-x: hidden;
   }
   
-  /* Full-screen container */
   .start-page {
     width: 100vw;
     height: 100vh;
@@ -18,7 +16,6 @@ body, html {
     flex-direction: column;
   }
   
-  /* Navbar */
   .navbar {
     display: flex;
     justify-content: space-between;
@@ -57,7 +54,6 @@ body, html {
     background-color: #333;
   }
   
-  /* Hero Section */
   .hero {
     display: flex;
     justify-content: center;
@@ -93,7 +89,6 @@ body, html {
     background-color: #777;
   }
   
-  /* Contrasting Black & White Sections */
   .contrast-section {
     display: flex;
     justify-content: center;
@@ -119,7 +114,6 @@ body, html {
     color: black;
   }
   
-  /* Features Section */
   .features {
     display: flex;
     flex-direction: column;
@@ -163,7 +157,6 @@ body, html {
     background-color: #777;
   }
   
-  /* Reviews Section */
   .reviews {
     text-align: center;
     padding: 50px;
@@ -189,7 +182,6 @@ body, html {
     margin-top: 10px;
   }
   
-  /* Slick Carousel */
   .slick-dots li button:before {
     color: white !important;
   }
@@ -198,7 +190,6 @@ body, html {
     color: white !important;
   }
   
-  /* Footer */
   .footer {
     text-align: center;
     padding: 20px;

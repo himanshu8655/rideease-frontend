@@ -6,7 +6,6 @@ function User() {
   const navigate = useNavigate();
 
   const handleClick = (imageName) => {
-    alert(`Button clicked for ${imageName}`);
   };
 
   const onUserTypeSelected = (user_type) => {

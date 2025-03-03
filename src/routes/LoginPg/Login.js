@@ -12,16 +12,11 @@ const Login = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(()=>{
-    
-    if(sessionStorage.getItem("token") == null || sessionStorage.getItem("userId") == null){
-      navigate('/login');
-    }
-    
-    else{
+  useEffect(() => {
+    if (sessionStorage.getItem("token") && sessionStorage.getItem("userId")) {
       navigate('/user-type');
     }
-  },[])
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();

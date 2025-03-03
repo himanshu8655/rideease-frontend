@@ -11,7 +11,7 @@ const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
  * @param {string} password - The user's password.
  * @param {string} contact_no - The user's conatct_no.
  */
-export const signup = async (firstName, lastName, email, password, image, contact_no) => {
+export const signup = async (firstName, lastName, email, password, contact_no) => {
   try {
     const response = await axios.post(`${API_URL}/auth/signup`, {
       firstName,
