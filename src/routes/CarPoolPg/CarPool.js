@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./CarPool.css";
 import { createRide, searchRide } from "../../service/RideService";
 import { Alert } from "../../components/Alert";
+import loadingImg from "../../assets/car_loading1.gif";
 
 const containerStyle = {
   width: "100vw",
@@ -20,6 +21,7 @@ const CarPool = () => {
     JSON.parse(sessionStorage.getItem("mapCenter")) || { lat: 40.7113, lng: -74.0052 }
   );
   const [value, setValue] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const { isLoaded } = useJsApiLoader({
@@ -61,33 +63,35 @@ const CarPool = () => {
     if (!start.lat || !end.lat) {
       Alert.error("Select start and end location");
     } else {
-      user_type === "commuter" ? joinCarPool() : createCarPool();
-    }
-  };
-
-  const joinCarPool = async () => {
-    try {
-      const res = await searchRide(start.lat, start.lng, end.lat, end.lng, value);
-      console.log(res.data);
-      if (typeof res.data === "string") {
-        Alert.error(res.data);
-      } else {
-        Alert.success("Ride found Successfully");
+      setIsLoading(true);
+  
+      const minLoadingTime = new Promise((resolve) => setTimeout(resolve, 3000));
+  
+      try {
+        const ridePromise = user_type === "commuter" ? joinCarPool() : createCarPool();
+  
+        await Promise.all([ridePromise, minLoadingTime]);
+      } catch (error) {
+        Alert.error("Error processing your request");
+      } finally {
+        setIsLoading(false);
         navigate("/active-ride");
       }
-    } catch (error) {
-      Alert.error("Error joining ride");
     }
   };
-
-  const createCarPool = async () => {
-    try {
-      const res = await createRide(start.lat, start.lng, end.lat, end.lng, value);
-      Alert.success(res.message);
-      navigate("/active-ride");
-    } catch (error) {
-      Alert.error("Error creating ride");
+  
+  const joinCarPool = async () => {
+    const res = await searchRide(start.lat, start.lng, end.lat, end.lng, value);
+    if (typeof res.data === "string") {
+      Alert.error(res.data);
+    } else {
+      Alert.success("Ride found Successfully");
     }
+  };
+  
+  const createCarPool = async () => {
+    const res = await createRide(start.lat, start.lng, end.lat, end.lng, value);
+    Alert.success(res.message);
   };
 
   if (!isLoaded) {
@@ -96,58 +100,81 @@ const CarPool = () => {
 
   return (
     <div style={{ position: "relative" }}>
-      <GoogleMap
-        key={JSON.stringify(mapCenter)} // Forces remount only when mapCenter changes
-        mapContainerStyle={containerStyle}
-        center={mapCenter}
-        zoom={13}
+      {/* Blur effect during loading */}
+      <div
+        style={{
+          filter: isLoading ? "blur(5px)" : "none",
+          transition: "filter 0.3s ease",
+        }}
       >
-        {start.lat && <Marker position={start} />}
-        {end.lat && <Marker position={end} />}
-      </GoogleMap>
-
-      <div className="form-container">
-        <Autocomplete
-          onPlaceChanged={() =>
-            handlePlaceSelected(window.autocompleteStart.getPlace(), "start")
-          }
-          onLoad={(autocomplete) => (window.autocompleteStart = autocomplete)}
+        <GoogleMap
+          key={JSON.stringify(mapCenter)}
+          mapContainerStyle={containerStyle}
+          center={mapCenter}
+          zoom={13}
         >
-          <input
-            type="text"
-            placeholder="Enter Start Location"
-            className="input-field"
-          />
-        </Autocomplete>
+          {start.lat && <Marker position={start} />}
+          {end.lat && <Marker position={end} />}
+        </GoogleMap>
 
-        <Autocomplete
-          onPlaceChanged={() =>
-            handlePlaceSelected(window.autocompleteEnd.getPlace(), "end")
-          }
-          onLoad={(autocomplete) => (window.autocompleteEnd = autocomplete)}
-        >
-          <input
-            type="text"
-            placeholder="Enter End Location"
-            className="input-field"
-          />
-        </Autocomplete>
+        <div className="form-container">
+          <Autocomplete
+            onPlaceChanged={() =>
+              handlePlaceSelected(window.autocompleteStart.getPlace(), "start")
+            }
+            onLoad={(autocomplete) => (window.autocompleteStart = autocomplete)}
+          >
+            <input
+              type="text"
+              placeholder="Enter Start Location"
+              className="input-field"
+            />
+          </Autocomplete>
 
-        {sessionStorage.getItem("user_type") != "commuter" ? (
-          <div className="seat-selection">
-            <label>No of Seats</label>
-            <div className="seat-controls">
-              <button onClick={handleDecrement}>-</button>
-              <p>{value}</p>
-              <button onClick={handleIncrement}>+</button>
+          <Autocomplete
+            onPlaceChanged={() =>
+              handlePlaceSelected(window.autocompleteEnd.getPlace(), "end")
+            }
+            onLoad={(autocomplete) => (window.autocompleteEnd = autocomplete)}
+          >
+            <input
+              type="text"
+              placeholder="Enter End Location"
+              className="input-field"
+            />
+          </Autocomplete>
+
+          {sessionStorage.getItem("user_type") != "commuter" ? (
+            <div className="seat-selection">
+              <label>No of Seats</label>
+              <div className="seat-controls">
+                <button onClick={handleDecrement}>-</button>
+                <p>{value}</p>
+                <button onClick={handleIncrement}>+</button>
+              </div>
             </div>
-          </div>
-        ) : null}
+          ) : null}
 
-        <button className="search-button" onClick={handleSearchRide}>
-          {sessionStorage.getItem("user_type") == "commuter" ? "Join Ride" : "Create Ride"}
-        </button>
+          <button className="search-button" onClick={handleSearchRide}>
+            {sessionStorage.getItem("user_type") == "commuter" ? "Join Ride" : "Create Ride"}
+          </button>
+        </div>
       </div>
+
+      {isLoading && (
+  <div className="loading-screen">
+    <img
+      src={loadingImg}
+      alt="Loading..."
+      style={{ width: "500px", height: "auto" }}
+      className="loading-gif"
+
+    />
+    <p style={{ color: "#fff", marginTop: "10px", fontSize: "18px" }}>
+      Finding your ride...
+    </p>
+  </div>
+)}
     </div>
   );
 };

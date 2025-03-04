@@ -27,6 +27,9 @@ const NavbarComponent = () => {
             <Nav.Link as={Link} to="/ride-history" className="nav-link">
               Ride History
             </Nav.Link>
+            <Nav.Link as={Link} to="/user-type" className="nav-link">
+              Change User
+            </Nav.Link>
             <Nav.Link as={Link} to="/ratings" className="nav-link">
               View Rating
             </Nav.Link>
