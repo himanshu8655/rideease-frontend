@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { fetchActiveRide, updateRideStatus } from "../../service/RideService";
-import Message from "../MessagePg/Message";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "../../components/Alert";
+import RideProgressBar from "../../components/RideProgressBar";
+import "./SearchRide.css"; // Import the updated CSS
 
 const SearchRide = () => {
   const [ride, setRide] = useState(null);
@@ -21,8 +22,8 @@ const SearchRide = () => {
       updated_status = "1";
     } else if (rideStatus == 1) {
       updated_status = "2";
-      navigate('/home');
-      Alert.success("Ride Ended Successfully!")
+      navigate("/home");
+      Alert.success("Ride Ended Successfully!");
     } else {
       return;
     }
@@ -54,8 +55,8 @@ const SearchRide = () => {
     const origin = `${start.coordinates[1]},${start.coordinates[0]}`;
     const destination = `${end.coordinates[1]},${end.coordinates[0]}`;
     const new_url = `${baseUrl}?key=${apiKey}&origin=${origin}&destination=${destination}&mode=driving`;
-  console.log(new_url);
-  return new_url;
+    console.log(new_url);
+    return new_url;
   };
 
   useEffect(() => {
@@ -66,7 +67,6 @@ const SearchRide = () => {
           setRide(result.data);
           setRideStatus(result.data.is_active);
           setBtnValue(getStatus(result.data.is_active));
-          // Generate the map URL for the route
           setMapUrl(generateMapUrl(result.data.start_location, result.data.end_location));
         } else if (result.success && result.data === null) {
           setError("No active rides available.");
@@ -82,27 +82,11 @@ const SearchRide = () => {
   }, []);
 
   return (
-    <div
-      style={{ backgroundColor: "#282c34", color: "#f1f1f1", padding: "20px" }}
-    >
-      <h1 style={{ textAlign: "center" }}>Ride Details</h1>
+    <div className="search-ride-container">
+      <h1 className="title">Ride Details #{ride?.ride_id}</h1>
+      <RideProgressBar rideStatus={rideStatus} />
       {ride ? (
-        <div
-          style={{ fontSize: "1.2rem", marginTop: "20px", textAlign: "center" }}
-        >
-          <p>
-            <strong>Carpool Owner ID:</strong> {ride.carpool_owner}
-          </p>
-          <p>
-            <strong>Start Location:</strong> Lat:{" "}
-            {ride.start_location.coordinates[1]}, Long:{" "}
-            {ride.start_location.coordinates[0]}
-          </p>
-          <p>
-            <strong>End Location:</strong> Lat:{" "}
-            {ride.end_location.coordinates[1]}, Long:{" "}
-            {ride.end_location.coordinates[0]}
-          </p>
+        <div style={{ textAlign: "center" }}>
           <p>
             <strong>Start Time:</strong>{" "}
             {new Date(ride.start_time).toLocaleString()}
@@ -110,25 +94,22 @@ const SearchRide = () => {
           <p>
             <strong>Seats Available:</strong> {ride.seat_available}
           </p>
-          <p>
-            <strong>Ride ID:</strong> {ride.ride_id}
-          </p>
+
           {ride.carpool_owner == userID ? (
-            <button onClick={handleRideStatus}>{btnValue}</button>
+            <button className="button" onClick={handleRideStatus}>
+              {btnValue}
+            </button>
           ) : null}
-          <div style={{ marginTop: "20px" }}>
+          <div className="iframe-container">
             <iframe
-              width="600"
-              height="450"
-              style={{ border: "0" }}
-              loading="lazy"
-              allowFullScreen
               src={mapUrl}
+              allowFullScreen
+              loading="lazy"
             ></iframe>
           </div>
         </div>
       ) : (
-        <p style={{ textAlign: "center" }}>No active rides available.</p>
+        <p className="loading-message">No active rides available.</p>
       )}
     </div>
   );

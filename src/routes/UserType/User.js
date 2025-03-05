@@ -1,31 +1,55 @@
 import React from 'react';
 import './User.css';
 import { useNavigate } from 'react-router-dom';
+import car_owner from "../../assets/car_owner.png";
+import commuter from "../../assets/commuter.png";
 
 function User() {
   const navigate = useNavigate();
 
-  const handleClick = (imageName) => {
-  };
-
   const onUserTypeSelected = (user_type) => {
     sessionStorage.setItem("user_type", user_type);
     navigate('/home');
-  }
+  };
 
   return (
     <div className="container">
-      <div className="image-container" onClick={()=>onUserTypeSelected('commuter')}>
-        <img src="\images\commuter.png " alt="Image 1" className="image" />
-        <button className="btn" onClick={() => handleClick('Image 1')}>
-          Join A Carpool
-        </button>
+      {/* Commuter Card */}
+      <div className="flip-card" onClick={() => onUserTypeSelected('commuter')}>
+        <div className="flip-card-inner">
+          {/* Front of the card (image) */}
+          <div className="flip-card-front">
+            <img src={commuter} alt="Commuter" className="image" />
+            <h3 className="card-title">Commuter</h3>
+          </div>
+          {/* Back of the card (description) */}
+          <div className="flip-card-back">
+            <h3>Commuter</h3>
+            <p>
+              A commuter is someone who joins an existing carpool to share rides
+              with others. Save money, reduce traffic, and make new friends!
+            </p>
+          </div>
+        </div>
       </div>
-      <div className="image-container" onClick={()=>onUserTypeSelected('carpool-owner')}>
-        <img src="\images\carpool.png " alt="Image 2" className="image" />
-        <button className="btn" onClick={() => handleClick('Image 2')}>
-          Create a Carpool
-        </button>
+
+      {/* Carpool Owner Card */}
+      <div className="flip-card" onClick={() => onUserTypeSelected('carpool-owner')}>
+        <div className="flip-card-inner">
+          {/* Front of the card (image) */}
+          <div className="flip-card-front">
+            <img src={car_owner} alt="Carpool Owner" className="image" />
+            <h3 className="card-title">Carpool Owner</h3>
+          </div>
+          {/* Back of the card (description) */}
+          <div className="flip-card-back">
+            <h3>Carpool Owner</h3>
+            <p>
+              A carpool owner creates and manages carpools. Offer rides to others,
+              earn extra income, and contribute to a greener environment!
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
