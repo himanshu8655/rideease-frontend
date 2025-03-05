@@ -16,7 +16,7 @@ const NavbarComponent = () => {
   return (
     <Navbar expand="lg" className="custom-navbar">
       <Container>
-        <Navbar.Brand as={Link} to="/" className="navbar-brand">
+        <Navbar.Brand as={Link} to="/home" className="navbar-brand">
           Hop-In
         </Navbar.Brand>
         <Navbar.Collapse id="basic-navbar-nav">

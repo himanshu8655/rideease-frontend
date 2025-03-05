@@ -9,7 +9,7 @@ const RideHistoryCard = ({
   start_location,
   end_location,
   commuter_id,
-  onWriteReview, // Accepting the function prop
+  onWriteReview,
 }) => {
   return (
     <div
@@ -42,7 +42,7 @@ const RideHistoryCard = ({
             alignItems: "center",
             gap: "0.5rem",
           }}
-          onClick={() => onWriteReview(ride_id)} // Calling parent function with ride_id
+          onClick={() => onWriteReview(ride_id)}
         >
           <FaStar /> Write a Review
         </button>
@@ -59,12 +59,7 @@ const RideHistoryCard = ({
       <p style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
         <strong>Total Seats:</strong> {total_seats}
       </p>
-      <p style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
-        <strong>Start Location:</strong> {start_location}
-      </p>
-      <p style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
-        <strong>End Location:</strong> {end_location}
-      </p>
+    
       <p style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
         <strong>Commuter IDs:</strong> {commuter_id.join(", ")}
       </p>
