@@ -21,6 +21,9 @@ const NavbarComponent = () => {
         </Navbar.Brand>
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto">
+          <Nav.Link as={Link} to="/profile" className="nav-link">
+              Profile
+            </Nav.Link>
           <Nav.Link as={Link} to="/active-ride" className="nav-link">
               Active Rides
             </Nav.Link>

@@ -16,7 +16,8 @@ import ResetPasswordModal from "./routes/ResetPasswordPg/ResetPasswordModal";
 import User from "./routes/UserType/User";
 import HomePage from "./routes/HomePg/HomePage";
 import Message from "./routes/MessagePg/Message";
-import StartPage from "./routes/StartPage/StartPage"; // Import StartPage
+import StartPage from "./routes/StartPage/StartPage";
+import Profile from "./routes/ProfilePg/Profile";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<StartPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
         <Route path="/user-type" element={<ProtectedRoute element={<User />} />} />
         <Route path="/home" element={<ProtectedRoute element={<HomePage />} />} />
         <Route path="/active-ride" element={<ProtectedRoute element={<SearchRide />} />} />
