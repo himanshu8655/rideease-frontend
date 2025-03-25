@@ -18,6 +18,7 @@ import HomePage from "./routes/HomePg/HomePage";
 import Message from "./routes/MessagePg/Message";
 import StartPage from "./routes/StartPage/StartPage";
 import Profile from "./routes/ProfilePg/Profile";
+import ContactUs from "./routes/ContactUS/ContactUS";
 
 const App = () => {
   return (
@@ -39,6 +40,7 @@ const App = () => {
         <Route path="/message" element={<ProtectedRoute element={<Message />} />} />
         <Route path="/reset-password" element={<ResetPasswordModal isOpen={true} onClose={() => {}} />} />
         <Route path="/write-review/:rideId" element={<ProtectedRoute element={<WriteReview />} />} />
+        <Route path="/contact-us" element={<ContactUs />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>

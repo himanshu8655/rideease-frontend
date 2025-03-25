@@ -17,7 +17,7 @@ const NavbarComponent = () => {
     <Navbar expand="lg" className="custom-navbar">
       <Container>
         <Navbar.Brand as={Link} to="/home" className="navbar-brand">
-          Hop-In
+          Rideease
         </Navbar.Brand>
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto">
@@ -35,6 +35,9 @@ const NavbarComponent = () => {
             </Nav.Link>
             <Nav.Link as={Link} to="/ratings" className="nav-link">
               View Rating
+            </Nav.Link>
+            <Nav.Link as={Link} to="/contact-us" className="nav-link">
+              Contact Us
             </Nav.Link>
             <Nav.Link onClick={handleLogout} className="nav-link logout-link">
               <i className="fas fa-sign-out-alt"></i> Logout
