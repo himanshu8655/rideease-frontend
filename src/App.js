@@ -7,7 +7,6 @@ import ForgotPasswordModal from "./routes/ForgotPasswordPg/ForgotPasswordModal";
 import CreateAccount from "./routes/CreateAccountPg/CreateAccount";
 import { ToastWrapper } from "./components/Alert";
 import ProtectedRoute from "./service/ProtectedRoutes";
-import SearchRide from "./routes/SearchRidePg/SearchRide";
 import Payment from "./routes/PaymentPg/Payment";
 import Rating from "./routes/RatingPg/Rating";
 import RideHistory from "./routes/RideHistoryPg/RideHistory";
@@ -19,6 +18,8 @@ import Message from "./routes/MessagePg/Message";
 import StartPage from "./routes/StartPage/StartPage";
 import Profile from "./routes/ProfilePg/Profile";
 import ContactUs from "./routes/ContactUS/ContactUS";
+import ActiveRide from "./routes/ActiveRidePg/ActiveRide";
+import SearchRide from "./routes/SearchRidePg/SearchRide";
 
 const App = () => {
   return (
@@ -29,8 +30,10 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
         <Route path="/user-type" element={<ProtectedRoute element={<User />} />} />
+        <Route path="/payment" element={<ProtectedRoute element={<Payment />} />} />
         <Route path="/home" element={<ProtectedRoute element={<HomePage />} />} />
-        <Route path="/active-ride" element={<ProtectedRoute element={<SearchRide />} />} />
+        <Route path="/active-ride" element={<ProtectedRoute element={<ActiveRide />} />} />
+        <Route path="/search-ride" element={<ProtectedRoute element={<SearchRide />} />} />
         <Route path="/chat" element={<ProtectedRoute element={<ChatRoom />} />} />
         <Route path="/forgot-password" element={<ForgotPasswordModal isOpen={true} onClose={() => {}} />} />
         <Route path="/create-account" element={<CreateAccount />} />

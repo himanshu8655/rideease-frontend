@@ -1,116 +1,72 @@
-import React, { useEffect, useState } from "react";
-import { fetchActiveRide, updateRideStatus } from "../../service/RideService";
-import { useNavigate } from "react-router-dom";
-import { Alert } from "../../components/Alert";
-import RideProgressBar from "../../components/RideProgressBar";
-import "./SearchRide.css"; // Import the updated CSS
+import { useEffect, useState } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import NavbarComponent from '../../components/NavBar';
 
 const SearchRide = () => {
-  const [ride, setRide] = useState(null);
-  const [error, setError] = useState(null);
-  const userID = sessionStorage.getItem("userId");
-  const [rideStatus, setRideStatus] = useState(0);
-  const [btnValue, setBtnValue] = useState("");
-  const [mapUrl, setMapUrl] = useState("");
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [randomVehicles, setRandomVehicles] = useState([]);
 
-  const handleRideStatus = async () => {
-    let updated_status = "";
-
-    if (rideStatus == 0) {
-      Alert.success("Ride Started!");
-      updated_status = "1";
-    } else if (rideStatus == 1) {
-      updated_status = "2";
-      navigate("/home");
-      Alert.success("Ride Ended Successfully!");
-    } else {
-      return;
-    }
-    await updateRideStatus(updated_status, ride.ride_id)
-      .then((data) => {
-        setRideStatus(updated_status);
-        setBtnValue(getStatus(updated_status));
-      })
-      .catch((err) => {
-        console.error("Error:", err.message);
-      });
-  };
-
-  const getStatus = (status) => {
-    if (status == 0) {
-      return "Start Ride";
-    }
-    if (status == 1) {
-      return "End Ride";
-    }
-    if (status == 2) {
-      return "Ride Ended";
-    }
-  };
-
-  const generateMapUrl = (start, end) => {
-    const baseUrl = "https://www.google.com/maps/embed/v1/directions";
-    const apiKey = process.env.REACT_APP_MAPS_API || "";
-    const origin = `${start.coordinates[1]},${start.coordinates[0]}`;
-    const destination = `${end.coordinates[1]},${end.coordinates[0]}`;
-    const new_url = `${baseUrl}?key=${apiKey}&origin=${origin}&destination=${destination}&mode=driving`;
-    console.log(new_url);
-    return new_url;
-  };
+  const startLat = searchParams.get('startLat');
+  const startLong = searchParams.get('startLong');
+  const endLat = searchParams.get('endLat');
+  const endLong = searchParams.get('endLong');
 
   useEffect(() => {
-    const fetchRideData = async () => {
-      try {
-        const result = await fetchActiveRide();
-        if (result.success && result.data) {
-          setRide(result.data);
-          setRideStatus(result.data.is_active);
-          setBtnValue(getStatus(result.data.is_active));
-          setMapUrl(generateMapUrl(result.data.start_location, result.data.end_location));
-        } else if (result.success && result.data === null) {
-          setError("No active rides available.");
-        } else {
-          setError("Failed to fetch ride details.");
-        }
-      } catch (err) {
-        setError(err.message);
-      }
-    };
+    if (!startLat || !startLong || !endLat || !endLong) {
+      navigate('/home');
+    }
 
-    fetchRideData();
-  }, []);
+    const vehicleList = [
+      { registrationNo: 'MH12AB1234', ownerName: 'John Doe', carType: 'Sedan', price: 4},
+      { registrationNo: 'DL8CAF5678', ownerName: 'Jane Smith', carType: 'SUV', price: 4},
+      { registrationNo: 'KA01CD9101', ownerName: 'Raj Mehta', carType: 'Hatchback' , price: 4},
+      { registrationNo: 'GJ06XY6543', ownerName: 'Sneha Patel', carType: 'Sedan' , price: 4},
+      { registrationNo: 'TN22ZZ0099', ownerName: 'Arun Kumar', carType: 'SUV' , price: 4},
+      { registrationNo: 'RJ14JK1111', ownerName: 'Simran Kaur', carType: 'Hatchback' , price: 4},
+      { registrationNo: 'UP32GH8888', ownerName: 'Amit Verma', carType: 'Sedan', price: 4 },
+      { registrationNo: 'WB20MN4321', ownerName: 'Riya Ghosh', carType: 'SUV', price: 4 },
+      { registrationNo: 'PB10QR7890', ownerName: 'Gagan Singh', carType: 'Sedan', price: 4 },
+      { registrationNo: 'CH01ST5555', ownerName: 'Neha Sharma', carType: 'Hatchback', price: 4 },
+    ];
+
+    // Get 3 random vehicles
+    const shuffled = [...vehicleList].sort(() => 0.5 - Math.random());
+    setRandomVehicles(shuffled.slice(0, 3));
+  }, [startLat, startLong, endLat, endLong, navigate]);
+
+  const handleBookRide = (registrationNo) => {
+    navigate(`/payment?startLat=${startLat}&startLong=${startLong}&endLat=${endLat}&endLong=${endLong}&price=${4}`)
+  };
 
   return (
-    <div className="search-ride-container">
-      <h1 className="title">Ride Details #{ride?.ride_id}</h1>
-      <RideProgressBar rideStatus={rideStatus} />
-      {ride ? (
-        <div style={{ textAlign: "center" }}>
-          <p>
-            <strong>Start Time:</strong>{" "}
-            {new Date(ride.start_time).toLocaleString()}
-          </p>
-          <p>
-            <strong>Seats Available:</strong> {ride.seat_available}
-          </p>
+    <div>
+      <NavbarComponent />
+      <h2>Search Ride Page</h2>
 
-          {ride.carpool_owner == userID ? (
-            <button className="button" onClick={handleRideStatus}>
-              {btnValue}
+      <h3>Available Vehicles</h3>
+      <ul style={{ listStyle: 'none', padding: 0 }}>
+        {randomVehicles.map((vehicle) => (
+          <li
+            key={vehicle.registrationNo}
+            style={{
+              border: '1px solid #ccc',
+              padding: '10px',
+              marginBottom: '10px',
+              borderRadius: '8px',
+              boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+            }}
+          >
+            <p><strong>Registration No:</strong> {vehicle.registrationNo}</p>
+            <p><strong>Owner Name:</strong> {vehicle.ownerName}</p>
+            <p><strong>Car Type:</strong> {vehicle.carType}</p>
+            <p><strong>Price: $</strong>{vehicle.price}</p>
+            <button onClick={() => handleBookRide(vehicle.registrationNo)}>
+              Book Ride
             </button>
-          ) : null}
-          <div className="iframe-container">
-            <iframe
-              src={mapUrl}
-              allowFullScreen
-              loading="lazy"
-            ></iframe>
-          </div>
-        </div>
-      ) : (
-        <p className="loading-message">No active rides available.</p>
-      )}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
