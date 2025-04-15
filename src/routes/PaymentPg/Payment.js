@@ -4,32 +4,36 @@ import React, { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import './Payment.css';
+import { useNavigate, useSearchParams} from 'react-router-dom';
+import { searchRide } from '../../service/RideService';
+import { Alert } from '../../components/Alert';
 
-// 1) Load your Publishable key from Stripe
+// Load your Stripe publishable key
 const stripePromise = loadStripe('pk_test_51RDZY2B2sb9Z6fmOHQL7ACvqDkel22GczUbiF4qhRRrim1KbozZU6iVDpSLzdxXVzEbYOR0KWwcBSzPTKWzOh9FR00ubqIzm7B');
 
 const PaymentForm = () => {
   const [nameOnCard, setNameOnCard] = useState('');
   const [success, setSuccess] = useState(false);
-
-  // 2) Stripe Hooks
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams();
+  
+  // Stripe hooks
   const stripe = useStripe();
   const elements = useElements();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 3) Ensure stripe and elements are ready
+    // Ensure stripe and elements are ready
     if (!stripe || !elements) {
-      alert('Stripe has not loaded yet. Please try again in a moment.');
+      alert('Stripe has not loaded yet. Please try again later.');
       return;
     }
 
-    // 4) Get Card details from CardElement
     const card = elements.getElement(CardElement);
 
-    // 5) Create a PaymentMethod w/ Billing details
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
+    // Create PaymentMethod with billing details
+    const { error } = await stripe.createPaymentMethod({
       type: 'card',
       card,
       billing_details: {
@@ -42,16 +46,35 @@ const PaymentForm = () => {
       return;
     }
 
-    // (Optional) 6) Send paymentMethod.id to your backend to create a PaymentIntent
-    // For now, we'll just simulate a success:
     setTimeout(() => {
       setSuccess(true);
     }, 1000);
+
+    setTimeout(() => {
+      const startLat = searchParams.get('startLat');
+      const startLong = searchParams.get('startLong');
+      const endLat = searchParams.get('endLat');
+      const endLong = searchParams.get('endLong');
+        const res = searchRide(startLat, startLong, endLat, endLong);
+    if (typeof res.data === "string") {
+      Alert.error(res.data);
+    } else {
+      navigate("/active-ride")
+    }
+    }, 1500);
   };
 
   return (
     <div className="payment-container">
-      <h2>Ride Payment</h2>
+      {/* Header product display */}
+      <div className="product-display">
+        
+        <div className="description">
+          <h3>Payment Page</h3>
+          <h5>Enter card details to pay for your ride.</h5>
+        </div>
+      </div>
+
       {success ? (
         <div className="payment-success">
           <h3>Payment Successful ✅</h3>
@@ -69,16 +92,41 @@ const PaymentForm = () => {
             />
           </label>
 
-          {/* 7) The Stripe CardElement in place of manual fields */}
           <label>
             Card Details
             <CardElement
-              options={{ style: { base: { fontSize: '16px', color: '#fff' } } }}
+              options={{
+                style: {
+                  base: {
+                    fontSize: '16px',
+                    color: '#fff',
+                    '::placeholder': { color: '#ccc' },
+                  },
+                  invalid: {
+                    color: '#9e2146',
+                  },
+                },
+              }}
             />
           </label>
 
-          <button type="submit" disabled={!stripe}>
+          <button type="submit">
             Pay Now
+          </button>
+
+          {/* Google Pay Button */}
+          <button 
+            type="button" 
+            className="google-pay-btn" 
+            onClick={() => alert("Google Pay clicked")}
+            disabled={!stripe}
+          >
+            <img
+              src="https://www.gstatic.com/marketing-cms/assets/images/f0/5d/9f4b413445c9b4a22b8b2c177cf6/google-pay.webp=n-w86-h48-fcrop64=1,00000000ffffffff-rw"
+              alt="Google Pay"
+              className="google-logo"
+            />
+            
           </button>
         </form>
       )}
@@ -86,7 +134,6 @@ const PaymentForm = () => {
   );
 };
 
-// 8) Wrap PaymentForm inside <Elements> so CardElement works
 const Payment = () => {
   return (
     <Elements stripe={stripePromise}>
