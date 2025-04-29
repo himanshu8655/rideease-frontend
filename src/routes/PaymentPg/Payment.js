@@ -12,6 +12,9 @@ import { Alert } from '../../components/Alert';
 const stripePromise = loadStripe('pk_test_51RDZY2B2sb9Z6fmOHQL7ACvqDkel22GczUbiF4qhRRrim1KbozZU6iVDpSLzdxXVzEbYOR0KWwcBSzPTKWzOh9FR00ubqIzm7B');
 
 const PaymentForm = () => {
+  const [promoCode, setPromoCode] = useState('');
+  const [message, setMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
   const [nameOnCard, setNameOnCard] = useState('');
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate()
@@ -20,10 +23,21 @@ const PaymentForm = () => {
   // Stripe hooks
   const stripe = useStripe();
   const elements = useElements();
-
+  const handleApplyPromo = () => {
+    if (promoCode.trim().toUpperCase() === 'DISCOUNT50') {
+      setMessage('Promo code applied successfully');
+      setIsSuccess(true);
+    } else {
+      setMessage('Invalid promo code');
+      setIsSuccess(false);
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+  
+ 
+  
     // Ensure stripe and elements are ready
     if (!stripe || !elements) {
       alert('Stripe has not loaded yet. Please try again later.');
@@ -109,11 +123,46 @@ const PaymentForm = () => {
               }}
             />
           </label>
-
+         <div style={{display: 'flex', flexDirection: 'row', gap: '8px', alignItems: 'centre' }}>
+        <input
+          type="text"
+          placeholder="Enter promo code"
+          value={promoCode}
+          onChange={(e) => setPromoCode(e.target.value)}
+          style={{
+            flexBasis: '70%',
+            height: '50px',
+            marginTop: '25px',
+          }}
+        />
+        <button
+        type="button"
+         onClick={handleApplyPromo}
+          style={{
+            flexBasis: '30%',
+            cursor: 'pointer',
+            height: '50px',
+            backgroundColor: '#fff',
+          }}
+        >
+          Apply
+        </button>
+        </div>
+        {message && (
+        <div
+          style={{
+            marginTop: '10px',
+            color: isSuccess ? 'green' : 'red',
+            fontWeight: 'bold',
+          }}
+        >
+          {message}
+        </div>
+      )}
           <button type="submit">
             Pay Now
           </button>
-
+          
           {/* Google Pay Button */}
           <button 
             type="button" 
