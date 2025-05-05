@@ -23,13 +23,29 @@ const PaymentForm = () => {
   // Stripe hooks
   const stripe = useStripe();
   const elements = useElements();
+
   const handleApplyPromo = () => {
     if (promoCode.trim().toUpperCase() === 'DISCOUNT50') {
       setMessage('Promo code applied successfully');
       setIsSuccess(true);
+      const startLat = searchParams.get('startLat');
+      const startLong = searchParams.get('startLong');
+      const endLat = searchParams.get('endLat');
+      const endLong = searchParams.get('endLong');
+      joinCarPool(startLat, startLong, endLat, endLong)
+       
     } else {
       setMessage('Invalid promo code');
       setIsSuccess(false);
+    }
+  };
+
+    const joinCarPool = async (startLat, startLong, endLat, endLong) => {
+    const res = await searchRide(startLat, startLong, endLat, endLong);
+    if (typeof res.data === "string") {
+      Alert.error(res.data);
+    } else {
+      Alert.success("Ride found Successfully");
     }
   };
   const handleSubmit = async (e) => {
